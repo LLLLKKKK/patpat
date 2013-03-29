@@ -1,13 +1,15 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 using namespace std;
 char name[100000][9];
 int age[100000];
 int net[100000];
-int inde[100000];
+vector<int> inde;
 int index1[100000];
 int agee[200];
+int agecount[200]={0};
 bool my(int a,int b) {
   if(age[a]<age[b])
     return true;
@@ -20,43 +22,26 @@ bool my1(int a,int b) {
     return true;
   return false;
 }
-int mtemp[100000];
-void butmerge(int* from, int ileft, int iright,int iend,int* to) {
-  int i0=ileft,i1=iright;
-  for (int j=ileft;j<iend;j++) {
-    if(i0<iright&&(i1>=iend||net[from[i0]]>=net[from[i1]])) {
-      to[j]=from[i0];
-      i0++;
-    } else {
-      to[j]=from[i1];
-      i1++;
-    }
-  }
-}
-int* merges(int n, int* sort, int* work)
-{
-  for (int width=1;width<n;width=2*width) {
-    for (int i=0;i<n;i=i+2*width) {
-      butmerge(sort,i,min(i+width,n),min(i+2*width,n),work);
-    }
-    int *tmp=work; work=sort; sort=tmp;
-  }
-  return sort;
-}
 int n;
 int main()
 {
+  inde.reserve(100000);
   int k;scanf("%d %d", &n,&k);
   for(int i=0;i<n;i++) {
-    inde[i]=i;
+    inde.push_back(i);
     scanf("%s %d %d",name[i],age+i,net+i);
   }
-  sort(inde,inde+n,my);
+  sort(inde.begin(),inde.end(),my);
+  for(int i=0;i<inde.size();i++) {
+    agecount[age[inde[i]]]++;
+    if(agecount[age[inde[i]]]>100)
+      inde.erase(inde.begin()+i);
+  }
   for(int i=0;i<200;i++)
     agee[i]=-1;
-  for(int i=1;i<n;i++)
+  for(int i=1;i<inde.size();i++)
     if(age[inde[i]]>age[inde[i-1]])agee[age[inde[i-1]]]=i-1;
-  agee[age[inde[n-1]]]=n-1;
+  agee[age[inde[inde.size()-1]]]=inde.size()-1;
   int prev=-1;
   for(int i=0;i<200;i++)
     if(agee[i]==-1)agee[i]=prev;
@@ -71,7 +56,7 @@ int main()
     } else {
       last1++;
       int ss=min(first+num,last1);
-      /*
+      
       int bound=first;
       index1[first]=inde[first];
       for(int j=first+1;j<last1;j++) {
@@ -82,14 +67,13 @@ int main()
         }
         if(bound<ss-1)bound++;
         index1[k+1]=temp;
-      */
-        for(int j=first;j<last1;j++)
-          index1[j]=inde[j];
-        int* xx=merges(last1-first,index1+first,mtemp+first);
-      for (int j=0;j<ss-first;j++) {
-        printf("%s %d %d\n", name[xx[j]],age[xx[j]],net[xx[j]]);
+      }
+      
+      for (int j=first;j<ss;j++) {
+        printf("%s %d %d\n", name[index1[j]],age[index1[j]],net[index1[j]]);
       }
     }
   }
   return 0;
 }
+
