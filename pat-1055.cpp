@@ -6,72 +6,63 @@ using namespace std;
 char name[100000][9];
 int age[100000];
 int net[100000];
-vector<int> inde;
+struct pp{
+  char name[9];
+  int age;
+  int net;
+};
+pp inde3[100000];
+int inde[100000];
+int inde2[100000];
 int index1[100000];
-int agee[200];
-int agecount[200]={0};
-bool my(int a,int b) {
-  if(age[a]<age[b])
-    return true;
-  else if(age[a]==age[b]&&strcmp(name[a],name[b])<0)
-    return true;
-  return false;
+bool my(pp a,pp b) {
+  if(a.net!=b.net) {
+    return a.net>b.net;
+  } else if(a.age!=b.age) {
+    return a.age<b.age;
+  } else {
+    return strcmp(a.name,b.name)<0;
+  }
 }
-bool my1(int a,int b) {
-  if(net[a]>net[b])
-    return true;
-  return false;
+bool my2(int a,int b) {
+  if(net[a]!=net[b]) {
+    return net[a]>net[b];
+  }else if(age[a]!=age[b]) {
+    return age[a]<age[b];
+  }else {
+    return strcmp(name[a],name[b])<0;
+  }
 }
-int n;
+int agecount[201]={0};
 int main()
 {
-  inde.reserve(100000);
-  int k;scanf("%d %d", &n,&k);
+  int k,n;scanf("%d %d", &n,&k);
   for(int i=0;i<n;i++) {
-    inde.push_back(i);
-    scanf("%s %d %d",name[i],age+i,net+i);
+    inde[i]=i;
+    //scanf("%s %d %d",name[i],age+i,net+i);
+    scanf("%s %d %d",inde3[i].name,&inde3[i].age,&inde3[i].net);
   }
-  sort(inde.begin(),inde.end(),my);
-  for(int i=0;i<inde.size();i++) {
-    agecount[age[inde[i]]]++;
-    if(agecount[age[inde[i]]]>100)
-      inde.erase(inde.begin()+i);
-  }
-  for(int i=0;i<200;i++)
-    agee[i]=-1;
-  for(int i=1;i<inde.size();i++)
-    if(age[inde[i]]>age[inde[i-1]])agee[age[inde[i-1]]]=i-1;
-  agee[age[inde[inde.size()-1]]]=inde.size()-1;
-  int prev=-1;
-  for(int i=0;i<200;i++)
-    if(agee[i]==-1)agee[i]=prev;
-    else prev=agee[i];
+  //sort(inde,inde+n,my2);
+  sort(inde3,inde3+n,my);
+  int n2=0;
+  for(int i=0;i<n;i++)
+    if(++agecount[inde3[i].age]<=100) inde3[n2++]=inde3[i];
+
   for(int i=0;i<k;i++) {
     int num,start,end;scanf("%d %d %d",&num,&start,&end);
-    start=max(age[inde[0]],start);
     printf("Case #%d:\n",i+1);
-    int first=agee[start-1]+1,last1=agee[end];
-    if (first>last1||(first==end&&age[inde[first]]<start&&age[inde[end]]>end)) {
+    bool flag=false;
+    for(int j=0;j<n2;j++) {
+      //if(age[inde[j]]>=start&&age[inde[j]]<=end) {
+      //  printf("%s %d %d\n", name[inde[j]],age[inde[j]],net[inde[j]]);
+      if(inde3[j].age>=start&&inde3[j].age<=end) {
+        printf("%s %d %d\n", inde3[j].name,inde3[j].age,inde3[j].net);
+        flag=true;
+        num--; if(!num)break;
+      }
+    }
+    if(!flag) {
       puts("None");
-    } else {
-      last1++;
-      int ss=min(first+num,last1);
-      
-      int bound=first;
-      index1[first]=inde[first];
-      for(int j=first+1;j<last1;j++) {
-        int temp=inde[j]; int k=bound;
-        while((k>=first)&&(net[index1[k]]<net[temp])) {
-          index1[k+1]=index1[k];
-          k--;
-        }
-        if(bound<ss-1)bound++;
-        index1[k+1]=temp;
-      }
-      
-      for (int j=first;j<ss;j++) {
-        printf("%s %d %d\n", name[index1[j]],age[index1[j]],net[index1[j]]);
-      }
     }
   }
   return 0;
