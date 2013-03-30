@@ -39,24 +39,26 @@ int main()
   int k,n;scanf("%d %d", &n,&k);
   for(int i=0;i<n;i++) {
     inde[i]=i;
-    //scanf("%s %d %d",name[i],age+i,net+i);
-    scanf("%s %d %d",inde3[i].name,&inde3[i].age,&inde3[i].net);
+    scanf("%s %d %d",name[i],age+i,net+i);
+    //scanf("%s %d %d",inde3[i].name,&inde3[i].age,&inde3[i].net);
   }
-  //sort(inde,inde+n,my2);
-  sort(inde3,inde3+n,my);
+  sort(inde,inde+n,my2);
+  //sort(inde3,inde3+n,my);
   int n2=0;
+  //for(int i=0;i<n;i++)
+   // if(++agecount[inde3[i].age]<=100) inde3[n2++]=inde3[i];
   for(int i=0;i<n;i++)
-    if(++agecount[inde3[i].age]<=100) inde3[n2++]=inde3[i];
+    if(++agecount[age[inde[i]]]<=100) inde[n2++]=inde[i];
 
   for(int i=0;i<k;i++) {
     int num,start,end;scanf("%d %d %d",&num,&start,&end);
     printf("Case #%d:\n",i+1);
     bool flag=false;
     for(int j=0;j<n2;j++) {
-      //if(age[inde[j]]>=start&&age[inde[j]]<=end) {
-      //  printf("%s %d %d\n", name[inde[j]],age[inde[j]],net[inde[j]]);
-      if(inde3[j].age>=start&&inde3[j].age<=end) {
-        printf("%s %d %d\n", inde3[j].name,inde3[j].age,inde3[j].net);
+      if(age[inde[j]]>=start&&age[inde[j]]<=end) {
+        printf("%s %d %d\n", name[inde[j]],age[inde[j]],net[inde[j]]);
+      //if(inde3[j].age>=start&&inde3[j].age<=end) {
+      //  printf("%s %d %d\n", inde3[j].name,inde3[j].age,inde3[j].net);
         flag=true;
         num--; if(!num)break;
       }
