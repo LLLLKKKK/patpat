@@ -8,7 +8,7 @@ multiset<int> mins, maxs;
 int mid=-1;
 int main() {
   int n;scanf("%d",&n);
-  stack<int> s; int me;
+  stack<int> s;
   while(n--) {
     char op[11]; scanf("%s",op);
     /*
@@ -18,7 +18,7 @@ int main() {
     for(auto i=maxs.begin();i!=maxs.end();i++)
       printf("%d ", *i);
     puts("max");
-    */
+   */ 
     if (strcmp(op,"Pop")==0) {
       if (s.size() == 0) {
         puts("Invalid");
@@ -45,16 +45,20 @@ int main() {
         mid=*it;
         mins.insert(mid);
         maxs.erase(it);
+      } else if(s.size()!=0){
+        auto tt=mins.end();
+        tt--; mid=*tt;
       }
       }
     } else if (strcmp(op,"Push")==0) {
       int num; scanf("%d",&num);
       if(s.size()==0) 
       { mins.insert(num); mid=num; }
-      else if(num<=mid) 
+      else if(num<=mid) {
         mins.insert(num);
-      else
+      } else {
         maxs.insert(num);
+      }
       s.push(num);
       if(mins.size()>maxs.size()+1) { 
         auto it=mins.end(); it--;
@@ -67,6 +71,9 @@ int main() {
         mid=*it;
         mins.insert(mid);
         maxs.erase(it);
+      } else if(s.size()!=0){
+        auto tt=mins.end();
+        tt--; mid=*tt;
       }
     } else if(strcmp(op,"PeekMedian")==0){
       if (s.size()==0) {
