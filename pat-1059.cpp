@@ -1,19 +1,16 @@
 #include<cstdio>
 #include<vector>
-#include<climits>
 #include<map>
 #include<cmath>
 using namespace std;
-
 int main() {	
 	vector<long> pps;
 	pps.reserve(5000);
 	pps.push_back(2);
-	pps.push_back(3);
 	long num; scanf("%ld", &num);
 	long p=num;
 	long li = (long)sqrt(num) + 2;
-	long i = 5;
+	long i = 3;
 	while (true) {
 		bool isp = true;
 		for (auto j = 1;j < pps.size(); j++) {
@@ -33,27 +30,17 @@ int main() {
 		puts("1=1");
 	} else {
 		map<long, long> ppp;
-		long end = 0;
-		long sq = sqrt(num);
-		for (end = 0; end < pps.size(); end++)
-			if (pps[end] > sq) break;
-
 		while (num != 1) {
-			i = 0;
-			for (i = 0; i <= end; i++)
+			for (i = 0; i <= pps.size(); i++)
 				if (num % pps[i] == 0)
 					break;
 			long pnow;
-			if (i <= end) {
+			if (i < pps.size()) {
 				pnow = pps[i];
 			} else {
 				pnow = num;
 			}
 			num = num / pnow;
-			
-			sq = sqrt(num);
-			for (end = 0; end < pps.size(); end++)
-				if (pps[end] > sq) break;
 			
 			auto it = ppp.find(pps[i]);
 			if (it == ppp.end()) {
