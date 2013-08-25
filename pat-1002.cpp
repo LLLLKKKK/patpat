@@ -1,68 +1,34 @@
-#include <vector>
-#include <iostream>
 #include <cstdio>
 
-using namespace std;
-typedef struct 
-{
-	int a;
-	double b;
-}Po;
+double a[1001] = {0};
+double b[1001] = {0};
 
-int main()
-{
-	vector<Po> a, b, c;
-	int n; 
-	cin >> n;
-	for (int i = 0; i < n;i++)
-	{
-		Po w; cin >> w.a >> w.b; a.push_back(w);
-	}
-	int m;
-	cin >> m;
-	for (int i = 0; i < m;i++)
-	{
-		Po w; cin >> w.a >> w.b; b.push_back(w);
-	}
-
-	int i = 0, j = 0;
-	while (i < a.size() && j < b.size())
-	{
-		if (a[i].a == b[j].a)
-		{
-			a[i].b += b[j].b;
-			if (a[i].b != 0)
-				c.push_back(a[i]);
-			i++; j++;
-		}
-		else if (a[i].a > b[j].a)
-		{
-			if (a[i].b != 0)
-			c.push_back(a[i]);
-			i++;	
-		}
-		else
-		{
-			if (b[j].b != 0)
-			c.push_back(b[j]);
-			j++;
-		}
-	}
-	if (i < a.size())
-	{
-		for (int k = i; k < a.size();k++)
-			if(a[k].b != 0)c.push_back(a[k]);
-	}
-	if (j < b.size())
-	{
-		for (int k = j; k < b.size();k++)
-			if(b[k].b != 0)c.push_back(b[k]);
-	}
-
-	cout << c.size();
-	for (int i = 0; i < c.size(); i++)
-		printf(" %d %.1lf", c[i].a, c[i].b);
-	cout << endl;
-	return 0;
+void readp(double *p) {
+  int n;
+  scanf("%d", &n);
+  for (int i = 0; i < n; i++) {
+    int a;
+    double b;
+    scanf("%d %lf", &a, &b);
+    p[a] = b;
+  }
 }
-
+int main() {
+  readp(a);
+  readp(b);
+  int n = 0;
+  for (int i = 0; i < 1001; i++) {
+    a[i] += b[i];
+    if (a[i] != 0) {
+      n++;
+    }
+  }
+  printf("%d", n);
+  for (int i = 1000; i >= 0; i--) {
+    if (a[i] != 0) {
+      printf(" %d %.1lf", i, a[i]);
+    }
+  }
+  putchar('\n');
+  return 0;
+}

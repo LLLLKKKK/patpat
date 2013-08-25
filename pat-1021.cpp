@@ -1,55 +1,11 @@
-#include <iostream>
-#include <string>
+#include <cstdio>
+#include <cstring>
 #include <vector>
 #include <algorithm>
-#include <cstring>
-#include <cctype>
-#include <climits>
-#include <deque>
-#include <cassert>
-#include <map>
-#include <cstdlib>
 #include <queue>
 #include <set>
-#include <memory>
 using namespace std;
 
-//int p_time[1000];
-//int f_time[1000];
-//int request[1000];
-//int finish = 60 * (17 - 8);
-//int finish_time[20] = {0};
-//int wins[20];
-//int cous[20];
-//vector<int> wait[20];
-//bool ss(int a, int b)
-//{
-//	if (finish_time[a] > finish_time[b])
-//		return true;
-//	return false;
-//}
-//int main()
-//{
-//	int windows, capacity, k, q;
-//	for (int i = 0; i < k; i++)
-//		scanf("%d", p_time + i);
-//	for (int i = 0; i < q; i++)
-//		scanf("%d", request + i);
-//
-//	for (int i = 0; i < windows; i++)
-//		wins[i] = i;
-//	for (int i = 0; i < k; i++)
-//	{
-//		pop_heap(wins, wins + windows - 1, ss);
-//		if (finish_time[windows - 1] != 0)
-//		{
-//			f_time[wins[windows]] = finish_time[windows - 1];
-//			cous[windows - 1] = i;
-//			
-//		}
-//		
-//	}
-//}
 int u[10001];
 int dist[10001];
 vector<int> p[10001];

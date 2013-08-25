@@ -1,40 +1,36 @@
-#include <vector>
-#include <iostream>
+#include <cstdio>
 
-using namespace std;
+void pf(int n) {
+  if (n < 1000) {
+    printf("%d", n);
+    return;
+  }
+  int re = n % 1000;
+  int div = n / 1000;
+  if (div != 0) {
+    pf(div);
+    putchar(',');
+  }
+  if (re > 100) {
+    printf("%d", re);
+  }
+  else if (re > 10) {
+    printf("0%d", re);
+  }
+  else {
+    printf("00%d", re);
+  }
+}
 
-int main()
-{
-	int a, b;
-	cin >> a >> b;
-	a += b;
-	if (a < 0) {cout << '-'; a = -a;}
-	vector<int> c;
-	if (a == 0) {cout << a << endl; return 0;}
-	while (a != 0)
-	{
-		c.push_back(a%1000);
-		a /= 1000;
-	}
-
-	for (int i = c.size() - 1;i >= 0; i--)
-	{
-		if (i == c.size() - 1)
-			cout << c[i];
-		else
-		{
-			if (c[i] < 10)
-				cout << "00" << c[i];
-			else if (c[i] < 100)
-				cout << '0' << c[i];
-			else if (c[i] == 0)
-				cout <<  "000";
-			else
-				cout << c[i];
-		}
-		if (i != 0)
-			cout << ',';
-	}
-	cout << endl;
-	return 0;
+int main() {
+  int a, b;
+  scanf("%d %d", &a, &b);
+  int c = a + b;
+  if (c < 0) {
+    c = -c;
+    putchar('-');
+  }
+  pf(c);
+  putchar('\n');
+  return 0;
 }

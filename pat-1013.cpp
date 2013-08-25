@@ -1,76 +1,38 @@
-#include<iostream>
-using namespace std;
-#include<memory.h>
-
-int map[1001][1001];
-int sto[1001][1001];
-int city;
-int way;
-int num;
-
-void dfs(int k)
-{
-	sto[0][k]=1;
-	for(int i=1;i<=city;i++)
-	{
-		if(sto[k][i]==1&&sto[0][i]==0)
-		{
-			dfs(i);
-		}
-	}
+#include <cstdio>
+#include <cstring>
+int map[1000][1000] = {0};
+int n;
+void dfs(int s) {
+    map[0][s] = 1;
+    for (int i=1;i<=n;i++) {
+        if (map[s][i] != 0 && map[0][i] == 0) {
+            dfs(i);
+        }
+    }
 }
 
-int main()
-{
-
-	int a;
-	int b;
-	int occupy;
-	int count;
-	
-	cin>>city;
-	cin>>way;
-	cin>>num;
-
-	memset(map,0,sizeof(map));
-	
-	for(int i=0;i<way;i++)
-	{
-		cin>>a;
-		cin>>b;
-		map[a][b]=1;
-		map[a][0]++;
-		map[b][a]=1;
-		map[b][0]++;
-	}
-
-	for(int i=0;i<num;i++)
-	{
-		memcpy(sto,map,sizeof(sto));
-		cin>>occupy;
-		count=0;
-		for(int i=1;i<=city;i++)
-		{
-			if(sto[occupy][i]==1)
-			{
-				sto[occupy][i]=0;
-				sto[i][occupy]=0;	
-			}
-		}
-
-	
-		for(int i=1;i<=city;i++)
-		{
-			if(sto[0][i]==0&&i!=occupy)
-			{
-				count++;
-				dfs(i);
-			}
-		}
-
-		cout<<count-1<<endl;
-
-	}
-
+int main() {
+    int m,k;
+    scanf("%d %d %d", &n, &m, &k);
+    while (m--) {
+        int a, b;
+        scanf("%d%d",&a,&b);
+        map[a][b]=1;
+        map[b][a]=1;
+    }
+    while(k--) {
+        int city, count=0;
+        scanf("%d",&city);
+        map[0][city]=-1;
+        for (int i=1;i<=n;i++) {
+            if (map[0][i] == 0 && i != city) {
+                count++;
+                dfs(i);
+            }
+        }
+        memset(map[0], 0, sizeof(int) * 1000);
+        printf("%d\n", count-1);
+    }
+    return 0;
 }
 

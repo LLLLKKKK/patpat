@@ -1,101 +1,67 @@
-#include <algorithm>
-#include <vector>
-#include <iostream>
 #include <cstdio>
-#include <cstring>
-#include <queue>
-#include <climits>
-
+#include <vector>
+#include <deque>
+#include <limits>
+#include <algorithm>
 using namespace std;
+const int N = 500;
+bool known[N] = {0};
+long dist_now[N];
+long hand_now[N] = {0};
 
-typedef struct 
-{
-	int teams;
-	bool known;
-	long dist;
-	int difp;
-	int collect;
-}city;
+int counts[N] = {0};
+int map[N][N] = {0};
+int hand[N] = {0};
 
-int map[500][500] = {0};
-city cs[500];
-
-class mc
-{
-	bool reverse;
-public:
-	mc(const bool& revparam = false)
-	{reverse = revparam;}
-	bool operator()(const int& lhs, const int& rhs)const
-	{
-		if (reverse) 
-			return (cs[lhs].dist < cs[rhs].dist);
-		else
-			return (cs[lhs].dist > cs[rhs].dist);
-	}
-};
-
-vector<int> pq;
-
-int main()
-{
-	int citys, roads, start, end;
-	cin >> citys >> roads >> start >> end;
-	for (int i = 0; i < citys; i++)
-	{
-		cin >> cs[i].teams;
-		cs[i].known = false;
-		cs[i].dist = INT_MAX;
-		cs[i].difp = 0;
-		cs[i].collect = 0;
-		pq.push_back(i);
-	}
-	cs[start].dist = 0;
-	cs[start].difp = 1;
-	cs[start].collect = cs[start].teams;
-
-	make_heap(pq.begin(), pq.end(), mc());
-
-	for (int i = 0; i < roads; i++)
-	{
-		int a, b, v; 
-		cin >> a; cin >> b; cin >> v;
-		map[a][b] = map[b][a] = v;
-	}
-
-	int count = 0;
-	while (count < pq.size())
-	{
-		int tmp = INT_MAX;
-		int smallest;
-		bool f = false;
-		
-		smallest = pq[count];
-		count++;
-			
-		cs[smallest].known = true;
-
-		for (int i = 0; i < citys; i++)
-		{
-			if (cs[i].known == false && map[smallest][i] != 0)
-			{
-				if (cs[smallest].dist + map[smallest][i] < cs[i].dist)
-				{
-					cs[i].dist = cs[smallest].dist + map[smallest][i];
-					cs[i].difp = cs[smallest].difp;
-					cs[i].collect = cs[i].teams + cs[smallest].collect;
-				}
-				else if (cs[smallest].dist + map[smallest][i] == cs[i].dist)
-				{
-					cs[i].difp += cs[smallest].difp;
-					cs[i].collect = max(cs[i].collect, cs[smallest].collect +  cs[i].teams);
-				}
-			}
-		}
-		make_heap(pq.begin() + count, pq.end(), mc());
-	}
-
-	cout <<cs[end].difp << ' '<< cs[end].collect << endl;
-	return 0;
+bool comp(int a, int b) {
+  if (dist_now[a] < dist_now[b])
+	return true;
+  return false;
 }
 
+int main() {
+  int n, m, c1, c2;
+  scanf("%d %d %d %d", &n, &m, &c1, &c2);
+  for (int i=0;i<n;i++) {
+	scanf("%d", hand + i);
+	dist_now[i] = numeric_limits<long>::max();
+  }
+  for (int i=0;i<m;i++) {
+	int a, b, c;
+	scanf("%d%d%d", &a, &b, &c);
+	map[a][b] = map[b][a] = c;
+  }
+  deque<int> q;
+  dist_now[c1] = 0;
+  counts[c1] = 1;
+  hand_now[c1] = hand[c1];
+  q.push_back(c1);
+  for (int i=0;i<n;i++) {
+	if (i != c1) q.push_back(i);
+  }
+  while (!q.empty()) {
+	int now = q.front();
+   	if (dist_now[now] > dist_now[c2]) break;
+	q.pop_front();
+	known[now] = true;
+	for (int i = 0; i < n; i++) {
+	  if (!known[i] && map[now][i] != 0) {
+		int dis = dist_now[now] + map[now][i];
+		int han = hand_now[now] + hand[i];
+		if (dis < dist_now[i]) {
+		  dist_now[i] = dis;
+		  hand_now[i] = han;
+		  counts[i] = counts[now];
+		}
+		else if (dis == dist_now[i]) {
+		  counts[i] += counts[now];
+		  if (hand_now[i] < han)
+			hand_now[i] = han;
+		}
+	  }
+   	}
+	sort(q.begin(), q.end(), comp);
+  }
+  printf("%d %ld\n", counts[c2], hand_now[c2]); 
+  return 0;
+}

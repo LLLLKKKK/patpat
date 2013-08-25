@@ -1,88 +1,66 @@
-#include<stdio.h>
- #include<ctype.h>
+#include <cstdio>
+#include <cctype>
+#include <climits>
 
- #define LLL_MAX 9223372036854775807LL
- long long convert(char *n, long long radix, long long in1)
- {
-  int i = 0;
-  long long r = 0;
-  long long  tmp = 0;
+int getd(const char& c) {
+    if (isdigit(c)) {
+        return c - '0';
+    } else {
+        return c - 'a' + 10;
+    }
+}
 
-  while(n[i] != '\0')
-  {
-   if (isdigit (n[i]) != 0)
-    tmp = n[i] - '0';
-   else 
-    tmp = n[i] - 'a' + 10;
-   
-   if ( ( LLL_MAX - tmp)/radix < r)
-    return in1 + 1;
-   r = r * radix + tmp;
-   i++;
-  }
+long long  convert(char* n, long long radix, long long max) {
+    long long r = 0;
+    while (*n != 0) {
+        int num = getd(*n);
+        if ((LLONG_MAX - num) / radix < r) { // LLONG_MAX exceed
+            return max + 1;
+        }
+        r = radix * r + num;
+        n++;
+    }
+    return r;
+}
 
-  return r;
- }
- long long test(char* n1, char *n2, long long radix)
- {
-  long long in1 = convert (n1, radix, LLL_MAX);
-  long long left, right, mid;
-  long long in2;
-  int i = 0;
-  int tmp;
+int test(char* n1, long long radix, char* n2) {
+    long long nn1 = convert(n1, radix, LLONG_MAX-1);
+    long long left = 1, right = LLONG_MAX, now, m;
+    for(int i=0; n2[i] != 0; i++) {
+        int n=getd(n2[i]);
+        left = left > n ? left : n;
+    }
+    left++;
+    while (left < right) {
+        m = (right - left) / 2 + left;
+        now = convert(n2, m, nn1);
+        if (now == nn1) {
+            right = m;
+        } else if (now > nn1) {
+            right = m - 1;
+        } else {
+            left = m + 1;
+        }
+    }
+    if (convert(n2, left, LLONG_MAX-1) != nn1)
+        left = -1;
+    return left;
+}
 
-  left = 1;
-  while (n2[i] != '\0')
-  {
-   if (isdigit (n2[i]))
-    tmp = n2[i] - '0';
-   else
-    tmp = n2[i] - 'a' +10;
-   if (left < tmp)
-    left = tmp;
-   i++;
-  }
-  left++;
-  right = LLL_MAX;
-
-  while(left < right)
-  {
-
-   mid = left + (right - left)/2;
-   in2 = convert(n2, mid, in1);
-
-   if (in1 > in2)
-    left = mid + 1;
-   else if (in2 < in1)
-    right = mid - 1;
-   else
-    right = mid;
-  }
-
-  in2 = convert(n2, left, LLL_MAX);
-  if (in1 != in2)
-   left = -1;
-   
-  return left;
- }
- int main()
- {
-  int flag;
-  long long radix;
-  char n1[11], n2[11];
-  long long r;
-
-  scanf("%s%s%d%lld",n1,n2,&flag,&radix);
-  
-  if (flag == 1)
-   r = test(n1, n2, radix);
-  else
-   r = test(n2, n1, radix);
-  
-  if(r == -1)
-   printf("Impossible\n");
-  else
-   printf("%lld\n", r);
-
-  return 0;
- }
+int main() {
+    char n1[10], n2[10];
+    long long radix, r;
+    int tag;
+    scanf("%s %s %d %lld", n1, n2, &tag, &radix);
+    if (tag == 1) {
+        r = test(n1, radix, n2);
+    } else {
+        r = test(n2, radix, n1);
+    }
+    if (r == -1) {
+        puts("Impossible");
+    } else {
+        printf("%lld", r);
+    }
+    return 0;
+}
